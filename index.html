@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Mỏ hỗn online 🌸</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(180deg, #ffe6f2, #fff0f5);
+    font-family: "Segoe UI", Arial, sans-serif;
+  }
+
+  /* Khung hiển thị ảnh + tên */
+  .card {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 200, 0.9);
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(255, 165, 0, 0.4);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 1s ease-in, transform 0.8s ease-in;
+    z-index: 1;
+  }
+
+  .card.show {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .card.fade {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+
+  .card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border: 2px solid #ff69b4;
+  }
+
+  .card span {
+    font-size: 16px;
+    color: #b00020;
+    font-weight: bold;
+  }
+
+  /* Hoa anh đào */
+  .petal {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: pink;
+    border-radius: 100% 0 100% 0;
+    opacity: 0.8;
+    transform: rotate(45deg);
+    animation: fall linear forwards;
+    z-index: 2;
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<script>
+/* Danh sách tên và ảnh (có thể thay link ảnh thật hoặc ảnh online) */
+const data = [
+  { name: "Chu Thị Hồng Nhung", img: "nhung.jpg" },
+  { name: "Nguyễn Trung Hiếu", img: "hieu.jpg" },
+  { name: "Nguyễn Văn Quyền", img: "quyen.jpg" },
+  { name: "Trần Đức Mạnh", img: "manh.jpg" },
+  { name: "Chu Thị Phương Linh", img: "linh.jpg" }
+];
+
+const maxCards = 50;       // số lượng thẻ ảnh + tên tối đa hiển thị cùng lúc
+const taoMoiSau = 100;     // thời gian tạo thẻ mới (ms)
+const tonTai = 3000;       // thời gian thẻ tồn tại (ms)
+
+/* --- Tạo khung ảnh + tên --- */
+function taoTheNgauNhien() {
+  if (document.querySelectorAll('.card').length >= maxCards) return;
+
+  const { name, img } = data[Math.floor(Math.random() * data.length)];
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const image = document.createElement("img");
+  image.src = img;
+
+  const span = document.createElement("span");
+  span.innerText = name;
+
+  card.appendChild(image);
+  card.appendChild(span);
+
+  const x = Math.random() * (window.innerWidth - 150);
+  const y = Math.random() * (window.innerHeight - 150);
+  card.style.left = `${x}px`;
+  card.style.top = `${y}px`;
+
+  document.body.appendChild(card);
+
+  // hiệu ứng hiện dần
+  setTimeout(() => card.classList.add("show"), 50);
+
+  // ẩn dần sau một thời gian
+  setTimeout(() => {
+    card.classList.remove("show");
+    card.classList.add("fade");
+    setTimeout(() => card.remove(), 2000);
+  }, tonTai);
+}
+
+// Lặp vô hạn
+setInterval(taoTheNgauNhien, taoMoiSau);
+
+/* --- Hiệu ứng hoa anh đào --- */
+function taoCanhHoa() {
+  const petal = document.createElement("div");
+  petal.className = "petal";
+  const startX = Math.random() * window.innerWidth;
+  const size = Math.random() * 10 + 10;
+  const duration = Math.random() * 5 + 5;
+  const delay = Math.random() * 3;
+
+  petal.style.left = `${startX}px`;
+  petal.style.width = `${size}px`;
+  petal.style.height = `${size}px`;
+  petal.style.animationDuration = `${duration}s`;
+  petal.style.animationDelay = `${delay}s`;
+
+  document.body.appendChild(petal);
+  setTimeout(() => petal.remove(), (duration + delay) * 1000);
+}
+setInterval(taoCanhHoa, 60);
+</script>
+</body>
+</html>
